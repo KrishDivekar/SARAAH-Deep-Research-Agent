@@ -428,7 +428,14 @@ if search_clicked:
                 search_query = query_text
 
         with st.spinner("🔍 Searching the web…"):
-            results = ddg_search(search_query, max_results)
+            try:
+                results = ddg_search(search_query, max_results)
+            except NameError as e:
+                st.error("Search engine function is unavailable. Please contact the administrator.")
+                results = []
+            except Exception as e:
+                st.warning(f"Search warning: {e}")
+                results = []
 
         if not results:
             st.error(f"No search results returned for \"{search_query}\". Try rephrasing your query.")
