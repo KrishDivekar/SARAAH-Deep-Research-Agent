@@ -432,9 +432,19 @@ if search_clicked:
                 results = ddg_search(search_query, max_results)
             except NameError as e:
                 st.error("Search engine function is unavailable. Please contact the administrator.")
+                # Ensure `search_query` exists for later diagnostic messages
+                try:
+                    search_query = follow_up_text or query_text or ""
+                except Exception:
+                    search_query = ""
                 results = []
             except Exception as e:
                 st.warning(f"Search warning: {e}")
+                # Ensure `search_query` exists in case of downstream formatting
+                try:
+                    search_query = follow_up_text or query_text or ""
+                except Exception:
+                    search_query = ""
                 results = []
 
         if not results:
