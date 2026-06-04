@@ -279,33 +279,21 @@ st.markdown('<div style="height:16px"></div>', unsafe_allow_html=True)
 def _start_research():
     st.session_state.search_clicked = True
 
-if st.session_state.clear_follow_up:
-    st.session_state.follow_up = ""
-    st.session_state.clear_follow_up = False
+# Single query input - remove follow-up flow entirely
+if st.session_state.get("clear_follow_up", False):
+    st.session_state["clear_follow_up"] = False
 
-if st.session_state.current_topic:
-    query = ""
-    follow_up = st.text_input(
-        "Ask a follow-up question",
-        value=st.session_state.get("follow_up", ""),
-        placeholder=f"Ask a follow-up about \"{st.session_state.current_topic}\"",
-        label_visibility="collapsed",
-        key="follow_up",
-        on_change=_start_research,
-    )
-else:
-    follow_up = ""
-    query = st.text_input(
-        "Your research question",
-        value=st.session_state.get("query", ""),
-        placeholder="e.g. How does the gut microbiome affect mental health?",
-        label_visibility="collapsed",
-        key="query",
-        on_change=_start_research,
-    )
+query = st.text_input(
+    "Your research question",
+    value=st.session_state.get("query", ""),
+    placeholder="e.g. How does the gut microbiome affect mental health?",
+    label_visibility="collapsed",
+    key="query",
+    on_change=_start_research,
+)
 
 query = str(query or "")
-follow_up = str(follow_up or "")
+follow_up = ""
 
 col1, col2, col3 = st.columns([3, 2, 3])
 with col2:
@@ -394,59 +382,29 @@ if search_clicked:
         """, unsafe_allow_html=True)
     else:
         query_text = query.strip()
-        follow_up_text = follow_up.strip()
-        current_topic = st.session_state.get("current_topic", "")
 
-        if query_text and not current_topic:
-            current_topic = query_text
-            st.session_state.current_topic = current_topic
-
-        if not current_topic and st.session_state.history:
-            current_topic = st.session_state.history[-1]["query"]
-            st.session_state.current_topic = current_topic
-
-        base_topic = current_topic or query_text
-
-        if not current_topic and not query_text:
+        if not query_text:
             st.markdown("""
             <div style="background:rgba(200,185,122,0.06);border:1px solid rgba(200,185,122,0.2);
                         border-radius:12px;padding:16px 20px;color:#c8b97a;font-size:14px;">
-              💬 Please enter a research question or a follow-up question above.
+              💬 Please enter a research question above.
             </div>
             """, unsafe_allow_html=True)
             st.stop()
-        elif current_topic and not follow_up_text and not query_text:
-            st.markdown("""
-            <div style="background:rgba(200,185,122,0.06);border:1px solid rgba(200,185,122,0.2);
-                        border-radius:12px;padding:16px 20px;color:#c8b97a;font-size:14px;">
-              💬 Ask a follow-up question about the current topic.
-            </div>
-            """, unsafe_allow_html=True)
-            st.stop()
-        else:
-            if follow_up_text:
-                search_query = follow_up_text
-            else:
-                search_query = query_text
+
+        search_query = query_text
+        base_topic = query_text
 
         with st.spinner("🔍 Searching the web…"):
             try:
                 results = ddg_search(search_query, max_results)
             except NameError as e:
                 st.error("Search engine function is unavailable. Please contact the administrator.")
-                # Ensure `search_query` exists for later diagnostic messages
-                try:
-                    search_query = follow_up_text or query_text or ""
-                except Exception:
-                    search_query = ""
+                search_query = query_text
                 results = []
             except Exception as e:
                 st.warning(f"Search warning: {e}")
-                # Ensure `search_query` exists in case of downstream formatting
-                try:
-                    search_query = follow_up_text or query_text or ""
-                except Exception:
-                    search_query = ""
+                search_query = query_text
                 results = []
 
         if not results:
@@ -454,7 +412,7 @@ if search_clicked:
         else:
             with st.spinner("🧠 Saraah is synthesising your research…"):
                 client = genai.Client(api_key=api_key)
-                prompt = build_prompt(base_topic, results, follow_up.strip())
+                prompt = build_prompt(base_topic, results, "")
                 answer = None
                 error_message = ""
                 for candidate in supported_models:
@@ -500,12 +458,11 @@ if search_clicked:
                 # Save to history
                 st.session_state.history.append({
                     "query": base_topic,
-                    "follow_up": follow_up.strip(),
+                    "follow_up": "",
                     "answer": answer,
                     "sources": sources,
                     "ts": time.strftime("%H:%M"),
                 })
-                st.session_state.clear_follow_up = True
 
 # ── Render history (newest first) ─────────────────────────────────────────
 for item in reversed(st.session_state.history):
