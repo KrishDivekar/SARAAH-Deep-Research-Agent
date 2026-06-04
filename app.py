@@ -414,7 +414,7 @@ if search_clicked:
               💬 Please enter a research question or a follow-up question above.
             </div>
             """, unsafe_allow_html=True)
-                        st.stop()
+            st.stop()
         elif current_topic and not follow_up_text and not query_text:
             st.markdown("""
             <div style="background:rgba(200,185,122,0.06);border:1px solid rgba(200,185,122,0.2);
@@ -422,7 +422,7 @@ if search_clicked:
               💬 Ask a follow-up question about the current topic.
             </div>
             """, unsafe_allow_html=True)
-                        st.stop()
+            st.stop()
         else:
             if follow_up_text:
                 search_query = follow_up_text
