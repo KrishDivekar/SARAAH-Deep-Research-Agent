@@ -170,7 +170,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    api_key = os.getenv("GENIE_API_KEY", "")
+    api_key = os.environ.get("GEMINI_API_KEY", "")
     supported_models = [
         "gemini-2.0-flash",
         "gemini-2.0-flash-lite",
