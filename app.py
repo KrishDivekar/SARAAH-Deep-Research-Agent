@@ -7,7 +7,7 @@ import re
 
 # ── Page config (must be first Streamlit call) ─────────────────────────────
 st.set_page_config(
-    page_title="Saraah — Deep Research",
+    page_title="Jarvis — Deep Research",
     page_icon="🔍",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -153,14 +153,14 @@ with st.sidebar:
         <circle cx="27" cy="22" r="2.5" fill="rgba(56,189,248,0.18)"/>
       </svg>
       <div>
-        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#0C2340;line-height:1.1;">Saraah</div>
+        <div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#0C2340;line-height:1.1;">Jarvis</div>
         <div style="font-size:10px;color:#2b6b86;letter-spacing:0.1em;text-transform:uppercase;">Deep Research</div>
       </div>
     </div>
     """, unsafe_allow_html=True)
     st.markdown("""
     <div style="background:transparent;border:0;padding:12px 14px 8px;margin-bottom:12px;">
-      <div style="font-size:11px;color:#0C2340;font-weight:700;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;">THE SARAAH ARCHITECTURE:</div>
+      <div style="font-size:11px;color:#0C2340;font-weight:700;margin-bottom:6px;letter-spacing:0.06em;text-transform:uppercase;">THE JARVIS ARCHITECTURE:</div>
       <div style="font-size:13px;color:#0C2340;line-height:1.6;">
         This deep research system is modeled after an incredibly high standard of intelligence and charm.<br>
         1. <strong>Maximum Brightness:</strong> Designed to match a mind that naturally lights up any room it enters.<br>
@@ -197,7 +197,7 @@ with st.sidebar:
       <div style="font-size:11px;color:#38BDF8;font-weight:500;margin-bottom:6px;">HOW IT WORKS</div>
       <div style="font-size:12px;color:#2b6b86;line-height:1.7;">
         1. Enter your query<br>
-        2. Saraah searches the web via DuckDuckGo<br>
+        2. Jarvis searches the web via DuckDuckGo<br>
         3. The AI engine synthesises a structured answer<br>
         4. Sources are listed below
       </div>
@@ -241,7 +241,7 @@ with col_center:
         <path d="M35 19Q36.5 15 34.5 13" stroke="#38BDF8" stroke-width="1.6" stroke-linecap="round" fill="none"/>
       </svg>
       <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:600;color:#0C2340;line-height:1.1;">
-        Saraah
+        Jarvis
       </div>
       <div style="font-size:11px;color:#2b6b86;letter-spacing:0.12em;text-transform:uppercase;margin-top:4px;">
         Deep Research
@@ -265,7 +265,7 @@ with col1:
         Research, deeply.
       </div>
       <div style="font-size:15px;color:#2b6b86;font-weight:300;">
-        Ask anything. Saraah searches the web and synthesises verified, sourced answers.
+        Ask anything. Jarvis searches the web and synthesises verified, sourced answers.
       </div>
     </div>
     """, unsafe_allow_html=True)
@@ -334,7 +334,7 @@ def build_prompt(base_topic: str, results: list[dict], follow_up: str = "") -> s
     current_query = follow_up_text if follow_up_text else original_topic
     follow_up_block = f"\nFOLLOW-UP QUESTION: {follow_up_text}\n" if follow_up_text else ""
 
-    return f"""You are Saraah, an elite deep research intelligence. Using the web search results below, write a comprehensive and well-structured research report answering the user's current question. If this is a follow-up request, treat the follow-up as the current focus and provide fresh insights based only on the latest search results. Do not reuse or repeat the previous response.
+    return f"""You are Jarvis, an elite deep research intelligence. Using the web search results below, write a comprehensive and well-structured research report answering the user's current question. If this is a follow-up request, treat the follow-up as the current focus and provide fresh insights based only on the latest search results. Do not reuse or repeat the previous response.
 
 ORIGINAL TOPIC: {original_topic}
 {follow_up_block}
@@ -410,7 +410,7 @@ if search_clicked:
         if not results:
             st.error(f"No search results returned for \"{search_query}\". Try rephrasing your query.")
         else:
-            with st.spinner("🧠 Saraah is synthesising your research…"):
+            with st.spinner("🧠 Jarvis is synthesising your research…"):
                 client = genai.Client(api_key=api_key)
                 prompt = build_prompt(base_topic, results, "")
                 answer = None
@@ -495,7 +495,7 @@ for item in reversed(st.session_state.history):
           <path d="M2 14Q1 11 2.5 9" stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
           <path d="M26 14Q27 11 25.5 9" stroke="#38BDF8" stroke-width="1.4" stroke-linecap="round" fill="none"/>
         </svg>
-        <span style="font-family:'Playfair Display',serif;font-size:15px;color:#38BDF8;font-weight:500;">Saraah</span>
+        <span style="font-family:'Playfair Display',serif;font-size:15px;color:#38BDF8;font-weight:500;">Jarvis</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <div style="width:6px;height:6px;border-radius:50%;background:#38BDF8;
